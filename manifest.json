@@ -1,0 +1,24 @@
+{
+  "name": "ANGLER",
+  "short_name": "ANGLER",
+  "description": "釣り用リールのライン巻き替えを管理するWebアプリです。",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#f4f6f8",
+  "theme_color": "#102d35",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

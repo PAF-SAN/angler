@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="釣り用リールのライン巻き替えを管理するWebアプリです。">
+  <meta name="theme-color" content="#102d35">
+  <title>ANGLER</title>
+  <!-- スマホのホーム画面追加やブラウザタブで使うアプリアイコンです。 -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css?v=20260513-1">
+</head>
+<body>
+  <!-- アプリ全体のヘッダーです。スマホで現在の目的が分かるように短く表示します。 -->
+  <header class="app-header">
+    <div class="brand-block">
+      <!-- 提供されたリール画像をアプリの顔として表示します。 -->
+      <img class="app-icon" src="icons/icon-192.png" alt="ANGLERアイコン">
+      <div>
+        <p class="eyebrow">Line Winding Manager</p>
+        <h1>ANGLER</h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <p class="save-status" id="saveStatus">保存準備中</p>
+      <button class="refresh-button" id="refreshAppButton" type="button">更新</button>
+    </div>
+  </header>
+
+  <!-- 主要画面を切り替えるナビゲーションです。 -->
+  <nav class="tab-bar" aria-label="主要メニュー">
+    <button class="tab-button active" type="button" data-tab="manage">管理</button>
+    <button class="tab-button" type="button" data-tab="calculator">計算</button>
+    <button class="tab-button" type="button" data-tab="database">ラインDB</button>
+    <button class="tab-button" type="button" data-tab="backup">バックアップ</button>
+  </nav>
+
+  <main>
+    <!-- リール、スプール、ラインを登録して現在状態を確認する画面です。 -->
+    <section class="tab-panel active" id="managePanel">
+      <section class="section-block">
+        <div class="section-title-row">
+          <div>
+            <p class="section-kicker">Reels</p>
+            <h2>リール登録</h2>
+          </div>
+        </div>
+
+        <form class="form-grid" id="reelForm">
+          <!-- リールの基本情報を保存する入力欄です。 -->
+          <label>リール名
+            <input id="reelName" type="text" placeholder="例：24ルビアス" required>
+          </label>
+          <label>番手
+            <input id="reelModel" type="text" placeholder="例：LT2500S" required>
+          </label>
+          <label>ギア比
+            <input id="reelGearRatio" type="number" min="1" step="0.1" placeholder="例：5.1" required>
+          </label>
+          <label>最大巻取り長 cm
+            <input id="reelMaxRetrieve" type="number" min="1" step="0.1" placeholder="例：72" required>
+          </label>
+          <label class="full-width">メモ
+            <textarea id="reelMemo" rows="2" placeholder="例：汎用スピニング"></textarea>
+          </label>
+          <button class="primary-button full-width" type="submit">リールを追加</button>
+          <button class="secondary-button full-width" id="cancelReelEditButton" type="button" hidden>リール編集をキャンセル</button>
+        </form>
+      </section>
+
+      <section class="section-block">
+        <div class="section-title-row">
+          <div>
+            <p class="section-kicker">Spools</p>
+            <h2>スプール登録</h2>
+          </div>
+        </div>
+
+        <form class="form-grid" id="spoolForm">
+          <!-- スプールは選択中または指定したリールに紐づけます。 -->
+          <label class="full-width">対象リール
+            <select id="spoolReelSelect" required></select>
+          </label>
+          <label>スプール名
+            <input id="spoolName" type="text" placeholder="例：純正スプール" required>
+          </label>
+          <label>空スプール径 mm
+            <input id="spoolEmptyDiameter" type="number" min="1" step="0.1" placeholder="任意：例 35">
+          </label>
+          <label>ライン種類
+            <select id="capacityLineType">
+              <option value="PE">PE</option>
+              <option value="ナイロン">ナイロン</option>
+            </select>
+          </label>
+          <label>基準太さ
+            <select id="capacityLineSize"></select>
+          </label>
+          <label>リールラインキャパ
+            <select id="capacityLengthSelect"></select>
+          </label>
+          <label class="full-width">メモ
+            <textarea id="spoolMemo" rows="2" placeholder="例：PE0.6号用"></textarea>
+          </label>
+          <button class="primary-button full-width" type="submit">スプールを追加</button>
+          <button class="secondary-button full-width" id="cancelSpoolEditButton" type="button" hidden>スプール編集をキャンセル</button>
+        </form>
+      </section>
+
+      <section class="section-block">
+        <div class="section-title-row">
+          <div>
+            <p class="section-kicker">Lines</p>
+            <h2>よく使うライン登録</h2>
+          </div>
+        </div>
+
+        <form class="form-grid" id="lineForm">
+          <!-- ライン径DBから選ぶと太さ、kg、lbを自動入力します。 -->
+          <label>ライン種類
+            <select id="lineType">
+              <option value="PE">PE</option>
+              <option value="ナイロン">ナイロン</option>
+              <option value="フロロ">フロロ</option>
+              <option value="エステル">エステル</option>
+            </select>
+          </label>
+          <label>規格
+            <select id="linePreset"></select>
+          </label>
+          <label>表示名
+            <input id="lineSizeLabel" type="text" placeholder="例：PE0.6号 / 12lb" required>
+          </label>
+          <label>kg
+            <input id="lineKg" type="number" min="0" step="0.001">
+          </label>
+          <label>lb
+            <input id="lineLb" type="number" min="0" step="0.1">
+          </label>
+          <label>太さ mm
+            <input id="lineDiameter" type="number" min="0.001" step="0.001" required>
+          </label>
+          <label>メモ
+            <input id="lineMemo" type="text" placeholder="例：バス用">
+          </label>
+          <button class="primary-button full-width" type="submit">ラインを追加</button>
+        </form>
+      </section>
+
+      <section class="section-block">
+        <div class="section-title-row">
+          <div>
+            <p class="section-kicker">Current</p>
+            <h2>登録一覧</h2>
+          </div>
+        </div>
+        <div class="list-stack" id="reelList"></div>
+      </section>
+    </section>
+
+    <!-- 下巻き量とハンドル回転数を計算し、現在設定と履歴を保存する画面です。 -->
+    <section class="tab-panel" id="calculatorPanel">
+      <section class="section-block">
+        <div class="section-title-row">
+          <div>
+            <p class="section-kicker">Calculator</p>
+            <h2>下巻き計算</h2>
+          </div>
+        </div>
+
+        <form class="form-grid" id="calculateForm">
+          <!-- 計算対象のリールとスプールを選びます。 -->
+          <label class="full-width">対象リール
+            <select id="calcReelSelect" required></select>
+          </label>
+          <label class="full-width">対象スプール
+            <select id="calcSpoolSelect" required></select>
+          </label>
+          <label>メインライン種類
+            <select id="mainLineType" required>
+              <option value="PE">PE</option>
+              <option value="ナイロン">ナイロン</option>
+              <option value="フロロ" selected>フロロ</option>
+              <option value="エステル">エステル</option>
+            </select>
+          </label>
+          <label>メインライン 号数/lb
+            <select id="mainLineSize" required></select>
+          </label>
+          <label>メインライン量 m
+            <input id="mainLength" type="number" min="0.1" step="0.1" placeholder="例：150" required>
+          </label>
+          <label>下巻きライン種類
+            <select id="backingLineType" required>
+              <option value="PE">PE</option>
+              <option value="ナイロン">ナイロン</option>
+              <option value="フロロ" selected>フロロ</option>
+              <option value="エステル">エステル</option>
+            </select>
+          </label>
+          <label>下巻きライン 号数/lb
+            <select id="backingLineSize" required></select>
+          </label>
+          <label>下巻き終了時の推定径 mm
+            <input id="estimatedBackingDiameter" type="number" min="0" step="0.1" placeholder="空欄なら簡易推定">
+          </label>
+          <button class="primary-button full-width" type="submit">計算する</button>
+        </form>
+
+        <div class="result-box" id="calculationResult">
+          <p>リールとスプールを登録すると計算できます。</p>
+        </div>
+
+        <form class="form-grid history-form" id="historyForm">
+          <!-- 計算後の実作業結果を保存する入力欄です。 -->
+          <label>実際の回転数
+            <input id="actualTurns" type="number" min="0" step="1" placeholder="例：85">
+          </label>
+          <label>巻いた日
+            <input id="woundDate" type="date">
+          </label>
+          <label>評価
+            <select id="rating">
+              <option value="ちょうど良い">ちょうど良い</option>
+              <option value="少ない">少ない</option>
+              <option value="多い">多い</option>
+            </select>
+          </label>
+          <label>メモ
+            <input id="historyMemo" type="text" placeholder="例：次回は+5回転">
+          </label>
+          <button class="secondary-button full-width" type="submit">現在設定と履歴に保存</button>
+        </form>
+      </section>
+
+      <section class="section-block">
+        <div class="section-title-row">
+          <div>
+            <p class="section-kicker">History</p>
+            <h2>巻き替え履歴</h2>
+          </div>
+        </div>
+        <div class="list-stack" id="historyList"></div>
+      </section>
+    </section>
+
+    <!-- アプリ内で使う換算表を確認する画面です。 -->
+    <section class="tab-panel" id="databasePanel">
+      <section class="section-block">
+        <div class="section-title-row">
+          <div>
+            <p class="section-kicker">Reference</p>
+            <h2>ライン径データベース</h2>
+          </div>
+        </div>
+        <div class="db-filter">
+          <label>表示するライン
+            <select id="databaseType">
+              <option value="PE">PE</option>
+              <option value="ナイロン">ナイロン・フロロ・エステル</option>
+            </select>
+          </label>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>号</th>
+                <th>kg</th>
+                <th>lb</th>
+                <th>太さmm</th>
+              </tr>
+            </thead>
+            <tbody id="databaseTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- JSONバックアップを出力・読込する画面です。 -->
+    <section class="tab-panel" id="backupPanel">
+      <section class="section-block">
+        <div class="section-title-row">
+          <div>
+            <p class="section-kicker">Backup</p>
+            <h2>バックアップ</h2>
+          </div>
+        </div>
+        <div class="backup-actions">
+          <button class="primary-button" id="exportBackupButton" type="button">JSONを出力</button>
+          <label class="file-button">JSONを読込
+            <input id="importBackupInput" type="file" accept="application/json">
+          </label>
+        </div>
+        <p class="hint-text">スマホのブラウザ内データは、サイトデータ削除やブラウザ変更で消える場合があります。定期的にJSONを出力してください。</p>
+      </section>
+    </section>
+  </main>
+
+  <script src="app.js?v=20260513-1"></script>
+</body>
+</html>

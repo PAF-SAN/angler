@@ -1,0 +1,15 @@
+# Netlifyで静的ファイルをそのまま公開するための設定です。
+[build]
+  publish = "."
+
+# Service Workerは更新検知が重要なため、長期キャッシュしない設定にします。
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+# PWAの設定ファイルは短時間だけキャッシュして、更新時の反映を早めます。
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"

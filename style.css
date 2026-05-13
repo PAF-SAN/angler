@@ -1,0 +1,395 @@
+/* 画面全体の基本色と余白を定義します。 */
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --surface-soft: #eef3f5;
+  --text: #172026;
+  --muted: #61707a;
+  --line: #d9e1e5;
+  --accent: #0f6d6c;
+  --accent-dark: #084c4b;
+  --accent-soft: #dcefed;
+  --warning: #a96010;
+  --shadow: 0 10px 25px rgba(20, 40, 45, 0.08);
+}
+
+/* ブラウザ標準のサイズ計算差を抑えます。 */
+* {
+  box-sizing: border-box;
+}
+
+/* スマホで読みやすい余白とフォントを設定します。 */
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+
+/* アプリ名を最上部に固定せず、自然にスクロールできるヘッダーにします。 */
+.app-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 18px 16px;
+  background: #102d35;
+  color: #ffffff;
+}
+
+/* アプリ名とアイコンを横並びにして、ホーム画面風の印象を出します。 */
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* 提供画像から作成したアプリアイコンをヘッダー内に表示します。 */
+.app-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #102d35;
+  object-fit: cover;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+.eyebrow,
+.section-kicker {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.app-header .eyebrow {
+  color: #9bc7c2;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 30px;
+  letter-spacing: 0;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: 20px;
+}
+
+.save-status {
+  margin-bottom: 4px;
+  color: #cce4e1;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* 保存状態と更新ボタンを縦に並べて、スマホ幅でも崩れにくくします。 */
+.header-actions {
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* 仕様変更後に古い表示が残った時、ユーザーが明示的に再読み込みできるボタンです。 */
+.refresh-button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* 主要画面を切り替えるタブを横スクロール可能にします。 */
+.tab-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #ffffff;
+  border-bottom: 1px solid var(--line);
+}
+
+.tab-button {
+  min-height: 46px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: #ffffff;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.tab-button.active {
+  border-bottom-color: var(--accent);
+  color: var(--accent-dark);
+}
+
+/* メイン領域はスマホでは全幅、PCでは中央に寄せます。 */
+main {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  padding: 14px;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* 各機能のまとまりを読みやすい白背景にします。 */
+.section-block {
+  margin-bottom: 14px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+/* 入力フォームはスマホでは1列、広い画面では2列にします。 */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+label {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--text);
+  font: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button,
+.file-button {
+  min-height: 44px;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primary-button {
+  border: 0;
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.secondary-button {
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+}
+
+.danger-button {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid #d8b8a0;
+  background: #fff7f0;
+  color: #7d3c00;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* 一覧カードは情報を詰めすぎず、操作ボタンを下に置きます。 */
+.list-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.item-card {
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.item-card h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+}
+
+.meta-line {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.small-button {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  background: var(--surface-soft);
+  color: var(--text);
+}
+
+/* 計算結果は作業中に見つけやすいように少し強調します。 */
+.result-box {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid #c7dad7;
+  border-radius: 8px;
+  background: #f3fbfa;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.result-item {
+  padding: 10px;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.result-label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.result-value {
+  display: block;
+  color: var(--accent-dark);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.history-form {
+  margin-top: 14px;
+}
+
+/* ラインDBの表はスマホで横スクロールできるようにします。 */
+.db-filter {
+  margin-bottom: 12px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+th,
+td {
+  padding: 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+  white-space: nowrap;
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+th {
+  background: #102d35;
+  color: #ffffff;
+  font-size: 13px;
+}
+
+/* バックアップ操作は指で押しやすいボタンにします。 */
+.backup-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.file-button {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+}
+
+.file-button input {
+  display: none;
+}
+
+.hint-text {
+  margin: 12px 0 0;
+  color: var(--warning);
+  font-size: 13px;
+}
+
+.empty-text {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* 広い画面では入力欄を2列にして、PCでの編集効率を上げます。 */
+@media (min-width: 720px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .backup-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
